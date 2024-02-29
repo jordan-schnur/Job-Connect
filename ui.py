@@ -18,14 +18,22 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.openButton = QtWidgets.QPushButton(self.centralwidget)
-        self.openButton.setGeometry(QtCore.QRect(330, 0, 100, 32))
+        self.openButton.setGeometry(QtCore.QRect(319, 0, 121, 32))
         self.openButton.setObjectName("openButton")
         self.textEdit = QtWidgets.QTextEdit(self.centralwidget)
-        self.textEdit.setGeometry(QtCore.QRect(100, 190, 251, 151))
+        self.textEdit.setGeometry(QtCore.QRect(370, 240, 411, 231))
         self.textEdit.setObjectName("textEdit")
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(30, 190, 58, 16))
+        self.label.setGeometry(QtCore.QRect(380, 210, 58, 16))
         self.label.setObjectName("label")
+        self.listWidget = QtWidgets.QListWidget(self.centralwidget)
+        self.listWidget.setGeometry(QtCore.QRect(20, 160, 256, 192))
+        self.listWidget.setObjectName("listWidget")
+        item = QtWidgets.QListWidgetItem()
+        self.listWidget.addItem(item)
+        self.captureJobs = QtWidgets.QPushButton(self.centralwidget)
+        self.captureJobs.setGeometry(QtCore.QRect(320, 40, 111, 32))
+        self.captureJobs.setObjectName("captureJobs")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 24))
@@ -40,6 +48,21 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Job Connect Automator"))
         self.openButton.setText(_translate("MainWindow", "Open Browser"))
+        self.textEdit.setMarkdown(_translate("MainWindow", "I hope this email finds you well.  I just recently saw a posting for a\n"
+"{job_title} position at {company} + and would love to learn more.  My\n"
+"experience with React.js, C#, and Java feels like a great fit for the\n"
+"role\\n\\nCould you tell me more about the software development team and what\n"
+"it\'s like to work for the company?I believe you would have great insight as a\n"
+"{title} for {company}.\\nI appreciate any information you could provide, looking\n"
+"forward to hearing from you!\n"
+"\n"
+""))
         self.label.setText(_translate("MainWindow", "Email"))
+        __sortingEnabled = self.listWidget.isSortingEnabled()
+        self.listWidget.setSortingEnabled(False)
+        item = self.listWidget.item(0)
+        item.setText(_translate("MainWindow", "New Item"))
+        self.listWidget.setSortingEnabled(__sortingEnabled)
+        self.captureJobs.setText(_translate("MainWindow", "Search Jobs"))
