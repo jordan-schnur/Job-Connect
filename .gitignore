@@ -162,3 +162,10 @@ cython_debug/
 .env
 
 .DS_Store
+
+# Gmail API
+credentials.json
+token.json
+
+# App Config
+config.json

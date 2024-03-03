@@ -13,7 +13,7 @@ function injectButtons() {
 
     jobDivs.forEach(div => {
         // Check if the button has already been injected
-        if (!div.querySelector('.injected-button')) {
+        if (!div.querySelector('.injectable-button')) {
             // Create a new button
             const newButton = document.createElement('button');
             newButton.innerHTML = 'Add to search';
