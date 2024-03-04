@@ -2,5 +2,11 @@
   "user": {
     "name": "",
     "email": ""
-  }
+  },
+  "emailTemplate": {
+    "subject": "Learning more about {job_title} at {company_name}",
+    "body": "I hope this email finds you well.  I just recently saw a posting for a {job_title} position at {company_name} + and would love to learn more.  My experience with React.js, C#, and Java feels like a great fit for the role.\n\nCould you tell me more about the software development team and what it's like to work for the company?I believe you would have great insight as a {title} for {company_name}.\n\nI appreciate any information you could provide, looking forward to hearing from you!"
+  },
+  "technologies": [
+  ]
 }

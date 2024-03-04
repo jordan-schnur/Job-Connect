@@ -9,7 +9,7 @@ function createJobHiddenInput() {
 function injectButtons() {
     // Get all div elements with 'data-job-id'
     const recruiterIds = document.querySelectorAll('section.org-people-profile-card');
-
+//document.querySelectorAll('section.org-people-profile-card > footer > div.entry-point')
     recruiterIds.forEach(section => {
         // Check if the button has already been injected
         if (!section.querySelector('.recruiter-button')) {
@@ -43,9 +43,9 @@ function injectButtons() {
 
                 hiddenInput.value = recruiterProfileUrl;
             });
-
-            // Append the button to the div
-            section.appendChild(newButton);
+            
+            let prependElement = section.querySelector('footer > div.entry-point');
+            prependElement.prepend(newButton);
         }
     });
 }

@@ -3,11 +3,13 @@ import os
 import random
 import re
 import time
+from typing import Optional
 
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import pyqtSignal, QThread
 from PyQt5.QtWidgets import QApplication
 from dotenv import load_dotenv
+from fuzzywuzzy import process, fuzz
 
 from Config import Configuration
 from GetProspectAPI import get_contact_info, response_to_linkedin_contact
@@ -49,6 +51,17 @@ class Worker(QThread):
 
 
 def open_page():
+    if os.path.exists("cookies.json"):
+        driver = webdriver.Chrome()
+        driver.get("https://www.linkedin.com/jobs/collections/recommended")
+        load_cookies(driver, "cookies.json")
+        driver.refresh()
+
+        driver.execute_script(javascript_content)
+        driver.execute_script(
+            'document.head.appendChild(document.createElement("style")).innerHTML = `{}`'.format(style_content))
+        return driver
+
     # Load environment variables
     load_dotenv()
 
@@ -70,12 +83,32 @@ def open_page():
 
     driver.find_element(By.CSS_SELECTOR, ".login__form_action_container ").click()
 
+    current_url = driver.current_url
+    if "https://www.linkedin.com/checkpoint/challenge/" in current_url:
+        print("Need to verify, don't redirect further.")
+
+        return driver
+
+    save_cookies(driver, "cookies.json")
+
     driver.get("https://www.linkedin.com/jobs/collections/recommended")
     driver.execute_script(javascript_content)
     driver.execute_script(
         'document.head.appendChild(document.createElement("style")).innerHTML = `{}`'.format(style_content))
-
     return driver
+
+
+def save_cookies(driver, path):
+    with open(path, 'w') as file:
+        json.dump(driver.get_cookies(), file)
+
+
+def load_cookies(driver, path):
+    if os.path.exists(path):
+        with open(path, 'r') as file:
+            cookies = json.load(file)
+            for cookie in cookies:
+                driver.add_cookie(cookie)
 
 
 def clean_location_string(location):
@@ -123,7 +156,9 @@ class MainApplicationWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.getRecruiterEmail.clicked.connect(self.getRecruiterEmailClicked)
         self.listWidget.itemSelectionChanged.connect(self.selection_changed)
         self.copyButton.clicked.connect(self.onCopyButtonClicked)
-        # self.textEdit.textChanged.connect(self.onTextChange)
+        self.prepareDraft.clicked.connect(self.on_prepare_draft)
+        self.reinjectJobs.clicked.connect(self.inject_jobs)
+        self.saveCookiesButton.clicked.connect(self.on_save_cookies_button_clicked)
 
     def onOpenButtonClicked(self, event):
         if not self.isBrowserOpen:
@@ -182,8 +217,10 @@ class MainApplicationWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 f"return Array.from(document.querySelector('div.job-details-jobs-unified-top-card__primary-description-container').childNodes).filter(node => node.nodeType === Node.TEXT_NODE).map(node => node.textContent.trim()).join(' ')"))
             description = self.driver.execute_script(
                 f"return document.querySelector('div.jobs-box__html-content').innerHTML")
+            description_text = self.driver.find_element(By.CSS_SELECTOR, "div.jobs-box__html-content").text
+            technologies = self.extract_technologies(description_text)
 
-            job = Job(job_id, job_title, company_name, company_url, location, description, None)
+            job = Job(job_id, job_title, company_name, company_url, location, description, technologies, None)
             self.add_job_to_list(job)
             QApplication.processEvents()
 
@@ -234,6 +271,7 @@ class MainApplicationWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.companyURL.setText("<a href='" + selected_job.company_url + "'>" + selected_job.company_url + "</a>")
         self.jobDescription.setHtml(process_job_description(selected_job.description))
         self.driver.get(get_people_url_from_company_url(selected_job.company_url))
+        self.matchTechnolgiesTextEdit.setPlainText(", ".join(selected_job.technologies))
         self.inject_people_content()
 
         if selected_job.recruiter:
@@ -265,7 +303,7 @@ class MainApplicationWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.listWidget.addItem(item)
         self.jobs.append(job)
 
-    def get_selected_job(self):
+    def get_selected_job(self) -> Optional[Job]:
         selected_items = self.listWidget.selectedItems()
         if selected_items:
             # Get the first selected item (if multiple selection is not enabled)
@@ -279,6 +317,35 @@ class MainApplicationWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         return None
 
+    def on_prepare_draft(self):
+        selected_item = self.get_selected_job()
+
+        if not selected_item:
+            self.statusbar.showMessage("Please select a job.", 3000)
+            return
+
+        if not selected_item.recruiter:
+            self.statusbar.showMessage("Please find/select a recruiter.", 3000)
+            return
+
+        if not selected_item.recruiter.email:
+            self.statusbar.showMessage("No email found for the recruiter.", 3000)
+            return
+
+        message = self.emailDraftText.toPlainText()
+        message = message.replace("{job_title}", selected_item.title)
+        message = message.replace("{company_name}", selected_item.company_name)
+        message = message.replace("{title}", selected_item.recruiter.title)
+        message = message.replace("{recruiter_name}", selected_item.recruiter.name)
+        subject = self.subjectLineEdit.text()
+        subject = subject.replace("{job_title}", selected_item.title)
+
+        success = self.gmail.send_email(self.config, selected_item.recruiter.email, subject, message)
+        if success:
+            self.statusbar.showMessage("Draft sent!", 3000)
+        else:
+            self.statusbar.showMessage("Draft failed to send.", 3000)
+
     def setup_recruiter_ui(self, recruiter: Recruiter):
         self.recruiterName.setText(recruiter.name)
         if recruiter.email:
@@ -289,3 +356,29 @@ class MainApplicationWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.recruiterTitle.setText(recruiter.title)
         self.recruiterCompany.setText(recruiter.company_name)
         self.recruiterURL.setText("<a href='" + recruiter.url + "'>" + recruiter.url + "</a>")
+
+    def inject_jobs(self):
+        self.driver.get("https://www.linkedin.com/jobs/collections/recommended")
+        self.driver.execute_script(javascript_content)
+        self.driver.execute_script(
+            'document.head.appendChild(document.createElement("style")).innerHTML = `{}`'.format(style_content))
+
+    def on_save_cookies_button_clicked(self):
+        if self.driver:
+            save_cookies(self.driver, "cookies.json")
+            self.statusbar.showMessage("Cookies saved!", 3000)
+
+    def extract_technologies(self, text) -> set[str]:
+        tech_list = self.config.technologies
+        found_techs = set()
+
+        job_description_lower = text.lower()
+
+        # Fuzzy matching for each word in the text
+        for tech in tech_list:
+            match, score = process.extractOne(tech.lower(), [text], scorer=fuzz.token_set_ratio)
+            if score >= 80:
+                found_techs.add(tech)
+        return found_techs
+
+        return found_techs

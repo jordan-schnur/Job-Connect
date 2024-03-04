@@ -17,9 +17,6 @@ class Ui_MainWindow(object):
         MainWindow.resize(1265, 833)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.textEdit = QtWidgets.QTextEdit(self.centralwidget)
-        self.textEdit.setGeometry(QtCore.QRect(780, 540, 411, 231))
-        self.textEdit.setObjectName("textEdit")
         self.formLayoutWidget_2 = QtWidgets.QWidget(self.centralwidget)
         self.formLayoutWidget_2.setGeometry(QtCore.QRect(780, 0, 481, 101))
         self.formLayoutWidget_2.setObjectName("formLayoutWidget_2")
@@ -40,7 +37,7 @@ class Ui_MainWindow(object):
         self.copyButton.setObjectName("copyButton")
         self.formLayout_2.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.copyButton)
         self.formLayoutWidget_3 = QtWidgets.QWidget(self.centralwidget)
-        self.formLayoutWidget_3.setGeometry(QtCore.QRect(0, 0, 241, 80))
+        self.formLayoutWidget_3.setGeometry(QtCore.QRect(0, 0, 241, 31))
         self.formLayoutWidget_3.setObjectName("formLayoutWidget_3")
         self.formLayout_3 = QtWidgets.QFormLayout(self.formLayoutWidget_3)
         self.formLayout_3.setFormAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
@@ -86,22 +83,51 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.listWidget)
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
+        self.formLayout_6 = QtWidgets.QFormLayout()
+        self.formLayout_6.setSizeConstraint(QtWidgets.QLayout.SetMaximumSize)
+        self.formLayout_6.setRowWrapPolicy(QtWidgets.QFormLayout.WrapLongRows)
+        self.formLayout_6.setLabelAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.formLayout_6.setFormAlignment(QtCore.Qt.AlignJustify|QtCore.Qt.AlignTop)
+        self.formLayout_6.setObjectName("formLayout_6")
+        self.label_11 = QtWidgets.QLabel(self.horizontalLayoutWidget)
+        self.label_11.setObjectName("label_11")
+        self.formLayout_6.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.label_11)
         self.jobTitle = QtWidgets.QLabel(self.horizontalLayoutWidget)
+        self.jobTitle.setText("")
         self.jobTitle.setObjectName("jobTitle")
-        self.verticalLayout.addWidget(self.jobTitle)
+        self.formLayout_6.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.jobTitle)
         self.companyName = QtWidgets.QLabel(self.horizontalLayoutWidget)
+        self.companyName.setText("")
         self.companyName.setObjectName("companyName")
-        self.verticalLayout.addWidget(self.companyName)
-        self.companyLocation = QtWidgets.QLabel(self.horizontalLayoutWidget)
-        self.companyLocation.setObjectName("companyLocation")
-        self.verticalLayout.addWidget(self.companyLocation)
+        self.formLayout_6.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.companyName)
         self.companyURL = QtWidgets.QLabel(self.horizontalLayoutWidget)
+        self.companyURL.setText("")
         self.companyURL.setOpenExternalLinks(True)
         self.companyURL.setObjectName("companyURL")
-        self.verticalLayout.addWidget(self.companyURL)
+        self.formLayout_6.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.companyURL)
+        self.label_12 = QtWidgets.QLabel(self.horizontalLayoutWidget)
+        self.label_12.setObjectName("label_12")
+        self.formLayout_6.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.label_12)
+        self.companyLocation = QtWidgets.QLabel(self.horizontalLayoutWidget)
+        self.companyLocation.setText("")
+        self.companyLocation.setObjectName("companyLocation")
+        self.formLayout_6.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.companyLocation)
+        self.label_13 = QtWidgets.QLabel(self.horizontalLayoutWidget)
+        self.label_13.setObjectName("label_13")
+        self.formLayout_6.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.label_13)
+        self.label_14 = QtWidgets.QLabel(self.horizontalLayoutWidget)
+        self.label_14.setObjectName("label_14")
+        self.formLayout_6.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.label_14)
+        self.label_15 = QtWidgets.QLabel(self.horizontalLayoutWidget)
+        self.label_15.setObjectName("label_15")
+        self.formLayout_6.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.label_15)
+        self.matchTechnolgiesTextEdit = QtWidgets.QPlainTextEdit(self.horizontalLayoutWidget)
+        self.matchTechnolgiesTextEdit.setObjectName("matchTechnolgiesTextEdit")
+        self.formLayout_6.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.matchTechnolgiesTextEdit)
+        self.verticalLayout.addLayout(self.formLayout_6)
         self.horizontalLayout.addLayout(self.verticalLayout)
         self.formLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.formLayoutWidget.setGeometry(QtCore.QRect(780, 130, 481, 331))
+        self.formLayoutWidget.setGeometry(QtCore.QRect(750, 130, 511, 121))
         self.formLayoutWidget.setObjectName("formLayoutWidget")
         self.formLayout = QtWidgets.QFormLayout(self.formLayoutWidget)
         self.formLayout.setLabelAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
@@ -148,9 +174,6 @@ class Ui_MainWindow(object):
         self.label_2.setGeometry(QtCore.QRect(780, 100, 71, 28))
         self.label_2.setTextFormat(QtCore.Qt.MarkdownText)
         self.label_2.setObjectName("label_2")
-        self.prepareDraft = QtWidgets.QPushButton(self.centralwidget)
-        self.prepareDraft.setGeometry(QtCore.QRect(780, 480, 151, 32))
-        self.prepareDraft.setObjectName("prepareDraft")
         self.verticalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
         self.verticalLayoutWidget.setGeometry(QtCore.QRect(240, 30, 541, 44))
         self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
@@ -166,6 +189,60 @@ class Ui_MainWindow(object):
         self.jobSearchProgress.setProperty("value", 0)
         self.jobSearchProgress.setObjectName("jobSearchProgress")
         self.verticalLayout_2.addWidget(self.jobSearchProgress)
+        self.formLayoutWidget_5 = QtWidgets.QWidget(self.centralwidget)
+        self.formLayoutWidget_5.setGeometry(QtCore.QRect(750, 380, 511, 321))
+        self.formLayoutWidget_5.setObjectName("formLayoutWidget_5")
+        self.formLayout_5 = QtWidgets.QFormLayout(self.formLayoutWidget_5)
+        self.formLayout_5.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
+        self.formLayout_5.setFieldGrowthPolicy(QtWidgets.QFormLayout.ExpandingFieldsGrow)
+        self.formLayout_5.setRowWrapPolicy(QtWidgets.QFormLayout.DontWrapRows)
+        self.formLayout_5.setLabelAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.formLayout_5.setFormAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.formLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.formLayout_5.setObjectName("formLayout_5")
+        self.label_8 = QtWidgets.QLabel(self.formLayoutWidget_5)
+        self.label_8.setObjectName("label_8")
+        self.formLayout_5.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.label_8)
+        self.subjectLineEdit = QtWidgets.QLineEdit(self.formLayoutWidget_5)
+        self.subjectLineEdit.setObjectName("subjectLineEdit")
+        self.formLayout_5.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.subjectLineEdit)
+        self.label_9 = QtWidgets.QLabel(self.formLayoutWidget_5)
+        self.label_9.setObjectName("label_9")
+        self.formLayout_5.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.label_9)
+        self.emailDraftText = QtWidgets.QTextEdit(self.formLayoutWidget_5)
+        self.emailDraftText.setMarkdown("I hope this email finds you well.  I just recently saw a posting for a\n"
+"{job_title} position at {company_name} + and would love to learn more.  My\n"
+"experience with React.js, C#, and Java feels like a great fit for the role.\n"
+"\n"
+"Could you tell me more about the software development team and what it\'s like\n"
+"to work for the company?I believe you would have great insight as a {title} for\n"
+"{company_name}.\n"
+"\n"
+"I appreciate any information you could provide, looking forward to hearing from\n"
+"you!\n"
+"\n"
+"")
+        self.emailDraftText.setObjectName("emailDraftText")
+        self.formLayout_5.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.emailDraftText)
+        self.prepareDraft = QtWidgets.QPushButton(self.formLayoutWidget_5)
+        self.prepareDraft.setObjectName("prepareDraft")
+        self.formLayout_5.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.prepareDraft)
+        self.label_10 = QtWidgets.QLabel(self.centralwidget)
+        self.label_10.setGeometry(QtCore.QRect(750, 260, 151, 31))
+        self.label_10.setTextFormat(QtCore.Qt.RichText)
+        self.label_10.setObjectName("label_10")
+        self.horizontalLayoutWidget_2 = QtWidgets.QWidget(self.centralwidget)
+        self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(0, 30, 241, 32))
+        self.horizontalLayoutWidget_2.setObjectName("horizontalLayoutWidget_2")
+        self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_2)
+        self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
+        self.reinjectJobs = QtWidgets.QPushButton(self.horizontalLayoutWidget_2)
+        self.reinjectJobs.setObjectName("reinjectJobs")
+        self.horizontalLayout_4.addWidget(self.reinjectJobs)
+        self.saveCookiesButton = QtWidgets.QPushButton(self.horizontalLayoutWidget_2)
+        self.saveCookiesButton.setObjectName("saveCookiesButton")
+        self.horizontalLayout_4.addWidget(self.saveCookiesButton)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -177,15 +254,6 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Job Connect Automator"))
-        self.textEdit.setMarkdown(_translate("MainWindow", "I hope this email finds you well.  I just recently saw a posting for a\n"
-"{job_title} position at {company} + and would love to learn more.  My\n"
-"experience with React.js, C#, and Java feels like a great fit for the\n"
-"role\\n\\nCould you tell me more about the software development team and what\n"
-"it\'s like to work for the company?I believe you would have great insight as a\n"
-"{title} for {company}.\\nI appreciate any information you could provide, looking\n"
-"forward to hearing from you!\n"
-"\n"
-""))
         self.recruiterStatus.setText(_translate("MainWindow", "Recruiter Status:"))
         self.getRecruiterEmail.setText(_translate("MainWindow", "Get Recruiter Email"))
         self.copyButton.setText(_translate("MainWindow", "Copy Email To Clipboard"))
@@ -200,14 +268,33 @@ class Ui_MainWindow(object):
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
-        self.jobTitle.setText(_translate("MainWindow", "Job Title"))
-        self.companyName.setText(_translate("MainWindow", "Company Name"))
-        self.companyLocation.setText(_translate("MainWindow", "Location"))
-        self.companyURL.setText(_translate("MainWindow", "<a href=\"http://www.qtcentre.org\">QtCentre</a>"))
+        self.label_11.setText(_translate("MainWindow", "Job Title:"))
+        self.label_12.setText(_translate("MainWindow", "Company URL:"))
+        self.label_13.setText(_translate("MainWindow", "Company Name:"))
+        self.label_14.setText(_translate("MainWindow", "Location:"))
+        self.label_15.setText(_translate("MainWindow", "Matched Technolgies:"))
         self.label_3.setText(_translate("MainWindow", "Recruiter Name:"))
         self.label_5.setText(_translate("MainWindow", "Recruiter Title:"))
         self.label_4.setText(_translate("MainWindow", "Recruiter Email:"))
         self.label_6.setText(_translate("MainWindow", "Recruiter Profile:"))
         self.label_7.setText(_translate("MainWindow", "Recruiter Company:"))
         self.label_2.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:18pt;\">Recruiter</span></p></body></html>"))
+        self.label_8.setText(_translate("MainWindow", "Subject"))
+        self.subjectLineEdit.setText(_translate("MainWindow", "Learning more about {job_title}"))
+        self.label_9.setText(_translate("MainWindow", "Body"))
+        self.emailDraftText.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:8px; margin-bottom:8px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">I hope this email finds you well.  I just recently saw a posting for a {job_title} position at {company_name} + and would love to learn more.  My experience with React.js, C#, and Java feels like a great fit for the role.</p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:8px; margin-bottom:8px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:8px; margin-bottom:8px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Could you tell me more about the software development team and what it\'s like to work for the company?I believe you would have great insight as a {title} for {company_name}.</p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:8px; margin-bottom:8px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:8px; margin-bottom:8px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">I appreciate any information you could provide, looking forward to hearing from you!</p></body></html>"))
         self.prepareDraft.setText(_translate("MainWindow", "Prepare Draft"))
+        self.label_10.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:18pt;\">Email to Recruiter</span></p></body></html>"))
+        self.reinjectJobs.setText(_translate("MainWindow", "Reinject Jobs"))
+        self.saveCookiesButton.setText(_translate("MainWindow", "Save Cookies"))

@@ -28,8 +28,7 @@ def create_draft(service, user_id, message_body):
     """Create a draft email."""
     try:
         draft = service.users().drafts().create(userId=user_id, body={'message': message_body}).execute()
-        print("Draft ID: {}".format(draft['id']))
-        return draft
+        return True
     except HttpError as error:
         print(f'An error occurred: {error}')
         raise error
@@ -57,6 +56,6 @@ class Gmail:
     def __init__(self):
         self.service = service_login()
 
-    def send_email(self, config: Configuration, to, subject, message_text):
+    def send_email(self, config: Configuration, to, subject: str, message_text: str):
         message_body = create_message(config.user.email, to, subject, message_text)
         create_draft(self.service, "me", message_body)

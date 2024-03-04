@@ -16,6 +16,10 @@ if __name__ == '__main__':
     gmail = Gmail()
     app = QtWidgets.QApplication(sys.argv)
     mainWin = MainApplicationWindow(config, gmail)
+
+    mainWin.subjectLineEdit.setText(config.emailTemplate.subject)
+    mainWin.emailDraftText.setText(config.emailTemplate.body)
+
     mainWin.show()
     sys.exit(app.exec_())
 
