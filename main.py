@@ -6,16 +6,18 @@ import sys
 from PyQt5 import QtWidgets
 from openai import OpenAI
 
+from CSVLogger import CSVLogger
 from Config import Configuration
 from Gmail import Gmail
 from mainappwindow import MainApplicationWindow
 from ui import Ui_MainWindow
 
 if __name__ == '__main__':
+    logger = CSVLogger('jobs.csv')
     config = Configuration()
     gmail = Gmail()
     app = QtWidgets.QApplication(sys.argv)
-    mainWin = MainApplicationWindow(config, gmail)
+    mainWin = MainApplicationWindow(config, gmail, logger)
 
     mainWin.subjectLineEdit.setText(config.emailTemplate.subject)
     mainWin.emailDraftText.setText(config.emailTemplate.body)

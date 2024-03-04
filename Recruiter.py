@@ -5,7 +5,6 @@ class Recruiter:
     title = None
     company_name = None
     contact_info = None
-    description = None
 
     def __init__(self, url, name, email, title, company_name, contact_info):
         self.url = url

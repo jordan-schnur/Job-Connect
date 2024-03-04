@@ -1,40 +1,56 @@
 .injectable-button:hover {
-background-color: var(--artdeco-button-primary-default-hover-background-color);
-color: var(--artdeco-button-primary-default-hover-color);
+    background-color: var(--artdeco-button-primary-default-hover-background-color);
+    color: var(--artdeco-button-primary-default-hover-color);
 }
 
 .injectable-button:active {
-background-color: var(--artdeco-button-primary-default-active-background-color);
-color: var(--artdeco-button-primary-default-active-color);
+    background-color: var(--artdeco-button-primary-default-active-background-color);
+    color: var(--artdeco-button-primary-default-active-color);
 }
 
 .injectable-button {
-position: absolute;
-right: 1em;
-bottom: 1em;
-border-radius: var(--corner-radius-xlarge) !important;
-padding-left: 2rem !important;
-padding-right: 2rem !important;
-transition-timing-function: cubic-bezier(.4, 0, .2, 1);
-transition-duration: 167ms;
-align-items: center;
-border: none;
-box-sizing: border-box;
-cursor: pointer;
-font-family: inherit;
-font-weight: 600;
-display: inline-flex;
-justify-content: center;
-min-width: 6.4rem;
-max-width: 480px;
-overflow: hidden;
-text-align: center;
-transition-property: background-color, box-shadow, color;
-vertical-align: middle;
-color: white;
-background-color: var(--artdeco-button-primary-default-static-background-color);
-font-size: 1.6rem;
-min-height: 4rem;
-padding: 1rem 1.6rem;
-line-height: 2rem;
+    position: absolute;
+    right: 1em;
+    bottom: 1em;
+    border-radius: var(--corner-radius-xlarge) !important;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+    transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+    transition-duration: 167ms;
+    align-items: center;
+    border: none;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+    display: inline-flex;
+    justify-content: center;
+    min-width: 6.4rem;
+    max-width: 480px;
+    overflow: hidden;
+    text-align: center;
+    transition-property: background-color, box-shadow, color;
+    vertical-align: middle;
+    color: white;
+    background-color: var(--artdeco-button-primary-default-static-background-color);
+    font-size: 1.6rem;
+    min-height: 4rem;
+    padding: 1rem 1.6rem;
+    line-height: 2rem;
+}
+
+.jca-selected-job {
+    background-color: #93ef2978 !important;
+}
+
+.jca-job-select-total {
+    position: fixed;
+    top: 2em;
+    left: 2em;
+    background-color: dimgrey;
+    z-index: 10000;
+    padding: 0.5em 2em;
+    color: white;
+    font-weight: bold;
+    box-shadow: 1px 1px 5px 1px black;
 }

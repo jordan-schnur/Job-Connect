@@ -3,41 +3,82 @@ function createJobHiddenInput() {
     hiddenInput.type = 'hidden';
     hiddenInput.name = 'job_ids';
     hiddenInput.id = 'jca-job_ids';
-    hiddenInput.value = '{"job_ids": []}';
+    hiddenInput.value = '[]';
     document.head.appendChild(hiddenInput);
 }
 
+function injectJobCountTotal() {
+    let jobTotal = document.getElementById('jca-job_total');
+
+    if (!jobTotal) {
+        let jobTotalElement = document.createElement('div');
+        jobTotalElement.id = 'jca-job_total';
+        jobTotalElement.classList.add('jca-job-select-total');
+        document.body.prepend(jobTotalElement);
+
+        jobTotal = jobTotalElement;
+    }
+
+    let hiddenInput = document.getElementById('jca-job_ids');
+    let totalJobsSelected = JSON.parse(hiddenInput.value).length;
+
+    jobTotal.innerHTML = `Selected Jobs: ${totalJobsSelected}`;
+}
+
 function injectButtons() {
-    // Get all div elements with 'data-job-id'
+
+    injectJobCountTotal();
     const jobDivs = document.querySelectorAll('div[data-job-id]');
 
     jobDivs.forEach(div => {
-        // Check if the button has already been injected
         if (!div.querySelector('.injectable-button')) {
-            // Create a new button
+            let jobId = div.getAttribute('data-job-id');
+            let hiddenInput = document.getElementById('jca-job_ids');
+
             const newButton = document.createElement('button');
             newButton.innerHTML = 'Add to search';
             newButton.className = 'injectable-button';  // Add a class to mark this button
+            div.setAttribute('data-is-selected', 'false');
 
-            // Optional: Add event listener to the button
+            let jobIds = JSON.parse(hiddenInput.value);
+            if (jobIds.indexOf(jobId) !== -1) {
+                div.style = 'background-color: #93ef2978 !important;';
+                div.setAttribute('data-is-selected', 'true');
+                newButton.innerHTML = 'Remove from search';
+            }
+
             newButton.addEventListener('click', function (event) {
-                // Handle the button click event
                 let jobId = div.getAttribute('data-job-id');
                 let hiddenInput = document.getElementById('jca-job_ids');
 
-                let currentJobIds = JSON.parse(hiddenInput.value);
+                let jobIds = JSON.parse(hiddenInput.value);
 
-                let exists = currentJobIds.job_ids.includes(jobId);
+                if (div.getAttribute('data-is-selected') === 'true') {
+                    div.setAttribute('data-is-selected', 'false');
 
-                if (exists) {
-                    console.log('Job ID already exists:', jobId);
-                    return;
+                    // Remove the job ID from the list
+                    let index = jobIds.indexOf(jobId);
+                    jobIds.splice(index, 1);
+
+                    div.style = '';
+                    event.target.innerHTML = 'Add to search';
+                } else {
+                    if (jobIds.indexOf(jobId) !== -1) {
+                        console.log('Job ID already exists:', jobId);
+                        return;
+                    }
+
+                    div.setAttribute('data-is-selected', 'true');
+
+                    jobIds.push(div.getAttribute('data-job-id'));
+                    div.style = 'background-color: #93ef2978 !important;';
+
+                    event.target.innerHTML = 'Remove from search';
                 }
 
-                currentJobIds.job_ids.push(div.getAttribute('data-job-id'));
-
-                hiddenInput.value = JSON.stringify(currentJobIds);
+                hiddenInput.value = JSON.stringify(jobIds);
             });
+
 
             // Append the button to the div
             div.appendChild(newButton);

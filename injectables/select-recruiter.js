@@ -44,7 +44,7 @@ function injectButtons() {
                 hiddenInput.value = recruiterProfileUrl;
             });
             
-            let prependElement = section.querySelector('footer > div.entry-point');
+            let prependElement = section.querySelector('footer');
             prependElement.prepend(newButton);
         }
     });

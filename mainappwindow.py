@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import QApplication
 from dotenv import load_dotenv
 from fuzzywuzzy import process, fuzz
 
+import CSVLogger
 from Config import Configuration
 from GetProspectAPI import get_contact_info, response_to_linkedin_contact
 from Gmail import Gmail
@@ -131,6 +132,29 @@ def get_people_url_from_company_url(company_url):
     return new_url
 
 
+def replace_string_variables(job: Job, string: str):
+    string = string.replace("{job_id}", job.title)
+    string = string.replace("{job_title}", job.title)
+    string = string.replace("{company_name}", job.company_name)
+    string = string.replace("{company_location}", job.location)
+    string = string.replace("{company_url}", job.company_url)
+    string = string.replace("{job_url}", f"https://www.linkedin.com/jobs/view/{job.id}/")
+
+    if job.recruiter:
+        string = string.replace("{recruiter_name}", job.recruiter.name)
+        # If email is None, something really went wrong
+        string = string.replace("{recruiter_email}", job.recruiter.email)
+        string = string.replace("{recruiter_title}", job.recruiter.title)
+        string = string.replace("{recruiter_company}", job.recruiter.company_name)
+        string = string.replace("{recruiter_url}", job.recruiter.url)
+
+    tech_list = list(job.technologies)
+    for i in range(1, len(tech_list) + 1):
+        string = string.replace(f'{{tech_{i}}}', tech_list[i - 1])
+
+    return string
+
+
 class MainApplicationWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     isBrowserOpen = False
     driver = None
@@ -140,11 +164,13 @@ class MainApplicationWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     recruiters = []
     config: Configuration
     gmail: Gmail
+    csv_logger: CSVLogger
 
-    def __init__(self, config: Configuration, gmail: Gmail):
+    def __init__(self, config: Configuration, gmail: Gmail, csv_logger: CSVLogger):
         super().__init__()
         self.config = config
         self.gmail = gmail
+        self.csv_logger = csv_logger
         self.setupUi(self)  # Apply the UI setup to this instance
         self.openButton.setText("Open Browser")  # Change the button text
         self.openButton.setToolTip("Click to open the browser")  # Add a tooltip to the button
@@ -180,7 +206,7 @@ class MainApplicationWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         jobsJson = self.fetch_jobs()
 
         jobs = json.loads(jobsJson)
-        jobs_ids = ['3815613878', '3819426741', '3834897208', '3814486924']
+        jobs_ids = jobs['job_ids']
 
         total_jobs = len(jobs_ids)
 
@@ -190,6 +216,13 @@ class MainApplicationWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # for job_id in jobs['job_ids']:
         for index, job_id in enumerate(jobs_ids):
+            # foundJob = self.csv_logger.get_job_by_id(job_id)
+            #
+            # if foundJob:
+            #     self.add_job_to_list(foundJob)
+            #     QApplication.processEvents()
+            #     continue
+
             self.jobSearchLabel.setText(f"Fetching job {index + 1} of {total_jobs}...")
             self.jobSearchProgress.setValue((index + 1) * 100 / total_jobs)
             QApplication.processEvents()
@@ -222,6 +255,7 @@ class MainApplicationWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
             job = Job(job_id, job_title, company_name, company_url, location, description, technologies, None)
             self.add_job_to_list(job)
+            self.csv_logger.add_job(job)
             QApplication.processEvents()
 
     def getRecruiterEmailClicked(self):
@@ -257,6 +291,7 @@ class MainApplicationWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         selected_job.recruiter = recruiter
         self.recruiterStatus.setText("Recruiter Status: Email found!")
+        self.csv_logger.update_via_with_recruiter(selected_job.id, recruiter)
         self.recruiters.append(recruiter)
         self.setup_recruiter_ui(selected_job.recruiter)
 
@@ -276,6 +311,15 @@ class MainApplicationWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         if selected_job.recruiter:
             self.setup_recruiter_ui(selected_job.recruiter)
+        else:
+            self.clear_recruiter_ui()
+
+    def clear_recruiter_ui(self):
+        self.recruiterName.setText("")
+        self.recruiterEmail.setText("")
+        self.recruiterTitle.setText("")
+        self.recruiterCompany.setText("")
+        self.recruiterURL.setText("")
 
     def inject_people_content(self):
         self.driver.execute_script(recruiter_select)
@@ -333,12 +377,9 @@ class MainApplicationWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             return
 
         message = self.emailDraftText.toPlainText()
-        message = message.replace("{job_title}", selected_item.title)
-        message = message.replace("{company_name}", selected_item.company_name)
-        message = message.replace("{title}", selected_item.recruiter.title)
-        message = message.replace("{recruiter_name}", selected_item.recruiter.name)
+        message = replace_string_variables(selected_item, message)
         subject = self.subjectLineEdit.text()
-        subject = subject.replace("{job_title}", selected_item.title)
+        subject = replace_string_variables(selected_item, subject)
 
         success = self.gmail.send_email(self.config, selected_item.recruiter.email, subject, message)
         if success:
@@ -359,9 +400,10 @@ class MainApplicationWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def inject_jobs(self):
         self.driver.get("https://www.linkedin.com/jobs/collections/recommended")
-        self.driver.execute_script(javascript_content)
+        self.driver.execute_script(read_file("injectables/select-jobs.js"))
         self.driver.execute_script(
-            'document.head.appendChild(document.createElement("style")).innerHTML = `{}`'.format(style_content))
+            'document.head.appendChild(document.createElement("style")).innerHTML = `{}`'.format(
+                read_file("injectables/jca-style.css")))
 
     def on_save_cookies_button_clicked(self):
         if self.driver:
@@ -377,7 +419,7 @@ class MainApplicationWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Fuzzy matching for each word in the text
         for tech in tech_list:
             match, score = process.extractOne(tech.lower(), [text], scorer=fuzz.token_set_ratio)
-            if score >= 80:
+            if score >= self.config.fuzzy_confidence:
                 found_techs.add(tech)
         return found_techs
 
