@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Job Connect Automator</string>
   </property>
+  <property name="windowIcon">
+   <iconset theme="laflafjaf"/>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="formLayoutWidget_2">
     <property name="geometry">
@@ -519,6 +522,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="assets/logo256.qrc"/>
+ </resources>
  <connections/>
 </ui>

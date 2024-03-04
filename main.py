@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 from dotenv import load_dotenv
 import os
 import sys
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtGui
 from openai import OpenAI
 
 from CSVLogger import CSVLogger
@@ -19,6 +19,7 @@ if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     mainWin = MainApplicationWindow(config, gmail, logger)
 
+    mainWin.setWindowIcon(QtGui.QIcon('logo256_rc.py'))
     mainWin.subjectLineEdit.setText(config.emailTemplate.subject)
     mainWin.emailDraftText.setText(config.emailTemplate.body)
 

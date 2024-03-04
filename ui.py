@@ -15,6 +15,8 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1265, 833)
+        icon = QtGui.QIcon.fromTheme("laflafjaf")
+        MainWindow.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.formLayoutWidget_2 = QtWidgets.QWidget(self.centralwidget)
@@ -122,6 +124,7 @@ class Ui_MainWindow(object):
         self.label_15.setObjectName("label_15")
         self.formLayout_6.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.label_15)
         self.matchTechnolgiesTextEdit = QtWidgets.QPlainTextEdit(self.horizontalLayoutWidget)
+        self.matchTechnolgiesTextEdit.setBackgroundVisible(False)
         self.matchTechnolgiesTextEdit.setObjectName("matchTechnolgiesTextEdit")
         self.formLayout_6.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.matchTechnolgiesTextEdit)
         self.verticalLayout.addLayout(self.formLayout_6)
@@ -298,3 +301,4 @@ class Ui_MainWindow(object):
         self.label_10.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:18pt;\">Email to Recruiter</span></p></body></html>"))
         self.reinjectJobs.setText(_translate("MainWindow", "Reinject Jobs"))
         self.saveCookiesButton.setText(_translate("MainWindow", "Save Cookies"))
+import logo256_rc
