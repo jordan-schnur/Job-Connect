@@ -205,8 +205,7 @@ class MainApplicationWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def jobChosen(self):
         jobsJson = self.fetch_jobs()
 
-        jobs = json.loads(jobsJson)
-        jobs_ids = jobs['job_ids']
+        jobs_ids = json.loads(jobsJson)
 
         total_jobs = len(jobs_ids)
 
