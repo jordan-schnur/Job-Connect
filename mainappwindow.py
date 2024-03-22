@@ -21,6 +21,8 @@ from ui import Ui_MainWindow
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
+from utils import normalize_job_title, normalize_company_name
+
 
 def read_file(filename):
     with open(filename, 'r') as file:
@@ -49,6 +51,35 @@ class Worker(QThread):
                 self.buttonClicked.emit()
                 break
             time.sleep(1)
+
+
+class SeleniumWorker(QThread):
+    taskCompleted = pyqtSignal()
+
+    def __init__(self):
+        super().__init__()
+        self.driver = webdriver.Chrome()
+        self.task_queue = []
+        self.is_running = True
+
+    def add_task(self, url, callback):
+        self.task_queue.append((url, callback))
+        if not self.isRunning():
+            self.start()
+
+    def stop_worker(self):
+        self.is_running = False
+        self.driver.quit()
+
+    def run(self):
+        while self.is_running:
+            if self.task_queue:
+                url, callback = self.task_queue.pop(0)  # Get the next task
+                self.driver.get(url)
+                callback(self.driver)
+                self.taskCompleted.emit()
+            else:
+                self.sleep(1)  # Sleep for a bit if there's no task
 
 
 def open_page():
@@ -190,7 +221,7 @@ class MainApplicationWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if not self.isBrowserOpen:
             self.isBrowserOpen = True
             self.driver = open_page()
-            # self.worker = Worker(self.driver)
+            # self.worker = SeleniumWorker();
             # self.worker.buttonClicked.connect(self.jobChosen)
             self.openButton.setText("Close Browser")
             # self.worker.start()
@@ -252,7 +283,8 @@ class MainApplicationWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             description_text = self.driver.find_element(By.CSS_SELECTOR, "div.jobs-box__html-content").text
             technologies = self.extract_technologies(description_text)
 
-            job = Job(job_id, job_title, company_name, company_url, location, description, technologies, None)
+            job = Job(job_id, normalize_job_title(job_title), normalize_company_name(company_name), company_url,
+                      location, description, technologies, None)
             self.add_job_to_list(job)
             self.csv_logger.add_job(job)
             QApplication.processEvents()
